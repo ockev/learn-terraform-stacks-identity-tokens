@@ -28,7 +28,7 @@ resource "azuread_application" "tfc_application" {
 
 resource "azuread_service_principal" "tfc_service_principal" {
   # v2.x expects "client_id" and azuread_application exports "app_id"
-  client_id = azuread_application.tfc_application.app_id
+  client_id = azuread_application.tfc_application.application_id
 }
 
 resource "azurerm_role_assignment" "tfc_role_assignment" {
@@ -60,7 +60,7 @@ output "subscription_id" {
 
 output "client_id" {
   # The Azure AD "client" ID is "app_id" in v2.x
-  value = azuread_application.tfc_application.app_id
+  value = azuread_application.tfc_application.appplication_id
 }
 
 output "tenant_id" {
