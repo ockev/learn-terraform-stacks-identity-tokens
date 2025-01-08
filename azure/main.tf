@@ -26,7 +26,7 @@ resource "azuread_application" "tfc_application" {
 #
 # https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal
 resource "azuread_service_principal" "tfc_service_principal" {
-  client_id = azuread_application.tfc_application.application_id
+  application_id = azuread_application.tfc_application.application_id
 }
 
 # Creates a role assignment which controls the permissions the service
