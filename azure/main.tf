@@ -1,14 +1,8 @@
-terraform {
-  required_providers {
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = "~> 2.40"  # or whichever exact version your code is written for
-    }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.70"  # example
-    }
-  }
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+provider "azurerm" {
+  features {}
 }
 
 # features{}
