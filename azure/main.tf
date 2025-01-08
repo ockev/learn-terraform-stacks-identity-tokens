@@ -1,11 +1,20 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
+terraform {
+  required_providers {
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 2.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      # pin your desired azurerm version
+      version = "~> 3.70"
+    }
+  }
+}
 
 provider "azurerm" {
   features {}
 }
-
-# features{}
 
 provider "azuread" {
 }
@@ -17,9 +26,8 @@ resource "azuread_application" "tfc_application" {
 }
 
 resource "azuread_service_principal" "tfc_service_principal" {
-  # v1.x expects 'application_id' (not 'client_id'),
-  # and the azuread_application resource exports 'application_id'
-  application_id = azuread_application.tfc_application.application_id
+  # v2.x expects "client_id" and azuread_application exports "app_id"
+  client_id = azuread_application.tfc_application.app_id
 }
 
 resource "azurerm_role_assignment" "tfc_role_assignment" {
@@ -29,20 +37,20 @@ resource "azurerm_role_assignment" "tfc_role_assignment" {
 }
 
 resource "azuread_application_federated_identity_credential" "tfc_federated_credential_plan" {
-  # Takes the Object ID of the azuread_application (which is 'id' in TF)
-  application_id       = azuread_application.tfc_application.id
-  display_name         = "my-tfc-federated-credential-plan"
-  audiences            = [var.tfc_azure_audience]
-  issuer               = "https://${var.tfc_hostname}"
-  subject              = "organization:${var.tfc_organization}:project:${var.tfc_project}:stack:${var.tfc_stack}:deployment:${var.tfc_deployment}:operation:plan"
+  # For federated credentials, "application_id" wants the Object ID => azuread_application.tfc_application.id
+  application_id = azuread_application.tfc_application.id
+  display_name   = "my-tfc-federated-credential-plan"
+  audiences      = [var.tfc_azure_audience]
+  issuer         = "https://${var.tfc_hostname}"
+  subject        = "organization:${var.tfc_organization}:project:${var.tfc_project}:stack:${var.tfc_stack}:deployment:${var.tfc_deployment}:operation:plan"
 }
 
 resource "azuread_application_federated_identity_credential" "tfc_federated_credential_apply" {
-  application_id       = azuread_application.tfc_application.id
-  display_name         = "my-tfc-federated-credential-apply"
-  audiences            = [var.tfc_azure_audience]
-  issuer               = "https://${var.tfc_hostname}"
-  subject              = "organization:${var.tfc_organization}:project:${var.tfc_project}:stack:${var.tfc_stack}:deployment:${var.tfc_deployment}:operation:apply"
+  application_id = azuread_application.tfc_application.id
+  display_name   = "my-tfc-federated-credential-apply"
+  audiences      = [var.tfc_azure_audience]
+  issuer         = "https://${var.tfc_hostname}"
+  subject        = "organization:${var.tfc_organization}:project:${var.tfc_project}:stack:${var.tfc_stack}:deployment:${var.tfc_deployment}:operation:apply"
 }
 
 output "subscription_id" {
@@ -50,8 +58,8 @@ output "subscription_id" {
 }
 
 output "client_id" {
-  # v1.x azuread_application resource exports 'application_id'
-  value = azuread_application.tfc_application.application_id
+  # The Azure AD "client" ID is "app_id" in v2.x
+  value = azuread_application.tfc_application.app_id
 }
 
 output "tenant_id" {
