@@ -1,4 +1,5 @@
 provider "azurerm" {
+  version = "~> 2.40" # or the latest version
   features {}
 }
 
