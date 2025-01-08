@@ -26,7 +26,7 @@ resource "azuread_application" "tfc_application" {
 #
 # https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal
 resource "azuread_service_principal" "tfc_service_principal" {
-  application_id = azuread_application.tfc_application.application_id
+  client_id = azuread_application.tfc_application.application_id
 }
 
 # Creates a role assignment which controls the permissions the service
@@ -44,7 +44,7 @@ resource "azurerm_role_assignment" "tfc_role_assignment" {
 #
 # https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_federated_identity_credential
 resource "azuread_application_federated_identity_credential" "tfc_federated_credential_plan" {
-  application_object_id = azuread_application.tfc_application.object_id
+  application_id = azuread_application.tfc_application.object_id
   display_name          = "my-tfc-federated-credential-plan"
   audiences             = [var.tfc_azure_audience]
   issuer                = "https://${var.tfc_hostname}"
@@ -56,7 +56,7 @@ resource "azuread_application_federated_identity_credential" "tfc_federated_cred
 #
 # https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_federated_identity_credential
 resource "azuread_application_federated_identity_credential" "tfc_federated_credential_apply" {
-  application_object_id = azuread_application.tfc_application.object_id
+  application_id = azuread_application.tfc_application.object_id
   display_name          = "my-tfc-federated-credential-apply"
   audiences             = [var.tfc_azure_audience]
   issuer                = "https://${var.tfc_hostname}"
