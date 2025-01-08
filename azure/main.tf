@@ -17,8 +17,9 @@ resource "azuread_application" "tfc_application" {
 }
 
 resource "azuread_service_principal" "tfc_service_principal" {
-  # Requires the client (application) ID from the azuread_application
-  client_id = azuread_application.tfc_application.app_id
+  # v1.x expects 'application_id' (not 'client_id'),
+  # and the azuread_application resource exports 'application_id'
+  application_id = azuread_application.tfc_application.application_id
 }
 
 resource "azurerm_role_assignment" "tfc_role_assignment" {
@@ -49,8 +50,8 @@ output "subscription_id" {
 }
 
 output "client_id" {
-  # This is the client/application ID from azuread_application
-  value = azuread_application.tfc_application.app_id
+  # v1.x azuread_application resource exports 'application_id'
+  value = azuread_application.tfc_application.application_id
 }
 
 output "tenant_id" {
