@@ -6,11 +6,11 @@ terraform {
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      # pin your desired azurerm version
-      version = "~> 3.70"
+      version = "~> 3.0"
     }
   }
 }
+
 
 provider "azurerm" {
   features {}
