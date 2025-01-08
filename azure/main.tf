@@ -60,7 +60,7 @@ output "subscription_id" {
 
 output "client_id" {
   # The Azure AD "client" ID is "app_id" in v2.x
-  value = azuread_application.tfc_application.appplication_id
+  value = azuread_application.tfc_application.application_id
 }
 
 output "tenant_id" {
